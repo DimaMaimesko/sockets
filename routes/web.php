@@ -32,6 +32,10 @@ Route::get('/data-chart', 'HomeController@chartData');
 
 Route::get('/socket-chart', 'HomeController@newEvent');
 
+Route::get('/chat', 'HomeController@showChart');
+
+Route::get('/chat/sendMessage', 'HomeController@sendMessage');
+
 
 Route::get('/redis', function(){
     $data = [

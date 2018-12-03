@@ -22,7 +22,8 @@ window.Vue = require('vue');
 // Vue.component('json-component', require('./components/JsonComponent.vue'));
 // Vue.component('line-chart-component', require('./components/LineChartComponent.vue'));
 // Vue.component('random-chart-component', require('./components/RandomChartComponent.vue'));
-Vue.component('socket-component', require('./components/SocketComponent.vue'));
+//Vue.component('socket-component', require('./components/SocketComponent.vue'));
+Vue.component('chat-component', require('./components/ChatComponent.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))

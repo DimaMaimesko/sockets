@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\MessageSent;
 
 class HomeController extends Controller
 {
@@ -122,6 +123,18 @@ class HomeController extends Controller
 
 
 
+    }
+
+    public function showChart()
+    {
+        return view('chat');
+    }
+
+    public function sendMessage(Request $request)
+    {
+        $message = $request->get('message');
+        event(new MessageSent($message));
+        return $message;
     }
 
 }
