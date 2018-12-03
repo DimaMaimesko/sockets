@@ -22,7 +22,7 @@
         {{--<json-component></json-component>--}}
         {{--<line-chart-component></line-chart-component>--}}
         {{--<random-chart-component></random-chart-component>--}}
-        {{--<socket-component></socket-component>--}}
+        <socket-component></socket-component>
 
     </div>
 </div>

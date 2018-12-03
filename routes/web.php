@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Cache;
 
 Route::get('/', function () {
-    Redis::set('name', 'Dimon');
-    Cache::put('foo', 'bar', 10);
-    return Cache::get('foo');
-//    return view('welcome');
+//    Redis::set('name', 'Dimon');
+//    Cache::put('foo', 'bar', 10);
+//    return Cache::get('foo');
+    return view('welcome');
 });
 
 Auth::routes();
@@ -29,6 +29,7 @@ Route::get('/get-json', 'HomeController@getJson')->name('getjson');
 Route::get('/random-chart', 'HomeController@chartRandom');
 
 Route::get('/data-chart', 'HomeController@chartData');
+
 Route::get('/socket-chart', 'HomeController@newEvent');
 
 

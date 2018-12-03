@@ -77574,7 +77574,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-
+var socket = io('http://127.0.0.1:3005');
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
         LineChart: __WEBPACK_IMPORTED_MODULE_0__LineChart__["a" /* default */]
@@ -77587,33 +77587,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             sale: 500
         };
     },
-    mounted: function mounted() {
-        var socket = io('http://localhost:3000');
 
-        socket.on("chart-updated:App\\Evens\\NewEvent", function (data) {
-            console.log(data.result);
-            this.data = data.result;
-        }.bind(this));
+    mounted: function mounted() {
+        var _this = this;
+
+        socket.on('chart-updated:App\\Events\\NewEvent', function (data) {
+            console.log(data);
+            _this.data = data;
+        });
     },
 
     methods: {
         getJson: function getJson() {
-            var _this = this;
+            var _this2 = this;
 
             axios.get('/data-chart').then(function (response) {
                 console.log(response.data);
-                _this.data = response.data;
+                _this2.data = response.data;
             });
         },
         sendData: function sendData() {
-            var _this2 = this;
+            var _this3 = this;
 
             axios({
                 method: 'get',
                 url: '/socket-chart',
                 params: { label: this.label, sale: this.sale, realtime: this.realtime }
             }).then(function (response) {
-                _this2.data = response.data;
+                _this3.data = response.data;
             });
         }
     }

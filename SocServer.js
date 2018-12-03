@@ -11,10 +11,10 @@ redis.subscribe('test-channel');
 redis.subscribe('chart-updated');
 
 redis.on('message', function (channel, message) {
-    message = JSON.parse(message);
+    // message = JSON.parse(message);
     console.log('Channel: ' + channel);
-    console.log('Event: ' + message.event);
-    console.log('Data: ' + message.data.result);
+    console.log('Event: ' + message);
+    // console.log('Data: ' + message.data);
     //console.log(message.data.username);
     // console.log(message.data.email);
     io.emit(channel + ':' + message.event, message.data);

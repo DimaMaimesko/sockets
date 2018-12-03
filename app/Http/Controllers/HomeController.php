@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Events\NewEvent;
 
 class HomeController extends Controller
 {
@@ -112,7 +111,7 @@ class HomeController extends Controller
         };
         if ($request->has('realtime')){
            if (filter_var($request->input('realtime'), FILTER_VALIDATE_BOOLEAN)){
-               event(new NewEvent($result));
+               event(new \App\Events\NewEvent($result));
            }
         };
 

@@ -28,7 +28,7 @@
 <script>
 
     import LineChart from './LineChart'
-
+    var socket = io('http://127.0.0.1:3005');
     export default {
         components: {
            LineChart
@@ -41,14 +41,14 @@
                sale: 500
            }
        },
-        mounted() {
-          var socket = io('http://localhost:3000');
 
-          socket.on("chart-updated:App\\Evens\\NewEvent", function(data){
-              console.log(data.result);
-              this.data = data.result;
-          }.bind(this));
+        mounted: function(){
+          socket.on('chart-updated:App\\Events\\NewEvent', (data) => {
+              console.log(data);
+              this.data = data;
+          });
         },
+
         methods:  {
           getJson: function () {
               axios.get('/data-chart').then((response) => {
