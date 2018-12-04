@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Events\MessageSent;
-
+use Illuminate\Support\Facades\Auth;
+use App\Events\PrivateMessageSent;
 class HomeController extends Controller
 {
     /**
@@ -135,6 +137,23 @@ class HomeController extends Controller
         $message = $request->get('message');
         event(new MessageSent($message));
         return $message;
+    }
+
+    public function showPrivateChat()
+    {
+        $users = User::where('id', '!=', Auth::id())->get()->toArray();
+        return view('private-chat', [
+            'users' => $users,
+            'userId' => Auth::id(),
+        ]);
+    }
+
+    public function sendPrivateMessage(Request $request)
+    {
+       //PrivateMessageSent::dispatch($request->all());
+//       dump($request->all());
+        event(new PrivateMessageSent($request->get('message'), $request->get('channels')));
+        return ['message' => $request->get('message'), 'channels' => $request->get('channels')];
     }
 
 }

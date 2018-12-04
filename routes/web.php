@@ -36,6 +36,10 @@ Route::get('/chat', 'HomeController@showChart');
 
 Route::get('/chat/sendMessage', 'HomeController@sendMessage');
 
+Route::get('/chat/private', 'HomeController@showPrivateChat');
+
+Route::get('/chat/private/sendMessage', 'HomeController@sendPrivateMessage');
+
 
 Route::get('/redis', function(){
     $data = [

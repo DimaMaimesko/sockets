@@ -24,6 +24,7 @@ window.Vue = require('vue');
 // Vue.component('random-chart-component', require('./components/RandomChartComponent.vue'));
 //Vue.component('socket-component', require('./components/SocketComponent.vue'));
 Vue.component('chat-component', require('./components/ChatComponent.vue'));
+Vue.component('private-chat-component', require('./components/PrivateChatComponent.vue'));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
