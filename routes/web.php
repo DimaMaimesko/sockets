@@ -40,6 +40,10 @@ Route::get('/chat/private', 'HomeController@showPrivateChat');
 
 Route::get('/chat/private/sendMessage', 'HomeController@sendPrivateMessage');
 
+Route::get('/echo-chat', 'HomeController@showEchoChat');
+
+Route::post('/echo-chat/send', 'HomeController@sendEchoMessage');
+
 
 Route::get('/redis', function(){
     $data = [

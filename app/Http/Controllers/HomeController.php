@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use App\Events\PrivateMessageSent;
+use App\Events\EchoMessage;
 class HomeController extends Controller
 {
     /**
@@ -154,6 +155,16 @@ class HomeController extends Controller
 //       dump($request->all());
         event(new PrivateMessageSent($request->get('message'), $request->get('channels')));
         return ['message' => $request->get('message'), 'channels' => $request->get('channels')];
+    }
+
+    public function showEchoChat()
+    {
+        return view('echo-chat');
+    }
+
+    public function sendEchoMessage(Request $request)
+    {
+       EchoMessage::dispatch($request->input('body'));
     }
 
 }
