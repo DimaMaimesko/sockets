@@ -22,10 +22,11 @@ window.Vue = require('vue');
 // Vue.component('json-component', require('./components/JsonComponent.vue'));
 // Vue.component('line-chart-component', require('./components/LineChartComponent.vue'));
 // Vue.component('random-chart-component', require('./components/RandomChartComponent.vue'));
-//Vue.component('socket-component', require('./components/SocketComponent.vue'));
+// Vue.component('socket-component', require('./components/SocketComponent.vue'));
 // Vue.component('chat-component', require('./components/ChatComponent.vue'));
 // Vue.component('private-chat-component', require('./components/PrivateChatComponent.vue'));
-Vue.component('echo-chat-component', require('./components/EchoChatComponent.vue'));
+// Vue.component('echo-chat-component', require('./components/EchoChatComponent.vue'));
+Vue.component('private-echo-chat-component', require('./components/PrivateEchoChatComponent.vue'));
 
 
 // const files = require.context('./', true, /\.vue$/i)

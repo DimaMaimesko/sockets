@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Room;
 use App\User;
 use Illuminate\Http\Request;
 use App\Events\MessageSent;
 use Illuminate\Support\Facades\Auth;
 use App\Events\PrivateMessageSent;
 use App\Events\EchoMessage;
+use App\Events\PrivateEchoMessage;
 class HomeController extends Controller
 {
     /**
@@ -165,6 +167,21 @@ class HomeController extends Controller
     public function sendEchoMessage(Request $request)
     {
        EchoMessage::dispatch($request->input('body'));
+    }
+
+
+    public function privateRoom($room)
+    {
+        $room = Room::where('id', $room)->with('users')->first();
+        return view('private-echo-chat', [
+            'room' => $room,
+        ]);
+    }
+
+    public function sendPrivateEchoMessage(Request $request)
+    {
+        PrivateEchoMessage::dispatch($request->get('message'), $request->get('room_id'));
+        return [$request->get('message'), $request->get('room_id')];
     }
 
 }

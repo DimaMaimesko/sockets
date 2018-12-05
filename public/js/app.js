@@ -19510,10 +19510,11 @@ window.Vue = __webpack_require__(86);
 // Vue.component('json-component', require('./components/JsonComponent.vue'));
 // Vue.component('line-chart-component', require('./components/LineChartComponent.vue'));
 // Vue.component('random-chart-component', require('./components/RandomChartComponent.vue'));
-//Vue.component('socket-component', require('./components/SocketComponent.vue'));
+// Vue.component('socket-component', require('./components/SocketComponent.vue'));
 // Vue.component('chat-component', require('./components/ChatComponent.vue'));
 // Vue.component('private-chat-component', require('./components/PrivateChatComponent.vue'));
-Vue.component('echo-chat-component', __webpack_require__(89));
+// Vue.component('echo-chat-component', require('./components/EchoChatComponent.vue'));
+Vue.component('private-echo-chat-component', __webpack_require__(89));
 
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
@@ -57799,7 +57800,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/components/EchoChatComponent.vue"
+Component.options.__file = "resources/js/components/PrivateEchoChatComponent.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -57808,9 +57809,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-1cc898f6", Component.options)
+    hotAPI.createRecord("data-v-57ebc008", Component.options)
   } else {
-    hotAPI.reload("data-v-1cc898f6", Component.options)
+    hotAPI.reload("data-v-57ebc008", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -57954,9 +57955,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+
+    props: {
+        room: {}
+    },
 
     data: function data() {
         return {
@@ -57968,20 +57976,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         var _this = this;
 
-        window.Echo.channel('echo-chat').listen('EchoMessage', function (_ref) {
+        console.log('Users: ' + this.room.users);
+        console.log('Room id: ' + this.room.id);
+        window.Echo.private('room.' + this.room.id).listen('PrivateEchoMessage', function (_ref) {
             var message = _ref.message;
 
             _this.allMessages.push(message);
+            console.log('From chat: ' + message);
         });
     },
 
 
     methods: {
         sendMessage: function sendMessage() {
-            axios.post('/echo-chat/send', { body: this.message });
+            axios({
+                method: 'post',
+                url: '/private-echo-chat/send',
+                params: { message: this.message, room_id: this.room.id }
+            }).then(function (response) {
+                console.log('Data: ' + response.data);
+            });
             this.allMessages.push(this.message);
             this.message = '';
-            console.log(this.message);
         }
     }
 });
@@ -57996,62 +58012,75 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "row justify-content-center" }, [
-      _c("div", { staticClass: "col-md-8" }, [
-        _c("div", { staticClass: "card card-default" }, [
-          _c("div", { staticClass: "card-header" }, [
-            _c(
-              "textarea",
-              {
-                staticClass: "form-control",
-                attrs: { rows: "10", readonly: "true" }
-              },
-              [
-                _vm._v(
-                  "                        " +
-                    _vm._s(_vm.allMessages.join("\n")) +
-                    "\n                    "
-                )
-              ]
-            )
-          ]),
+      _c(
+        "div",
+        { staticClass: "col-md-8" },
+        [
+          _c("h1", [_vm._v("Private room # " + _vm._s(_vm.room.name))]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("input", {
-              directives: [
+          _c("h5", [_vm._v("for next users:")]),
+          _vm._v(" "),
+          _vm._l(_vm.room.users, function(user) {
+            return _c("ul", [_vm._v(_vm._s(user.name))])
+          }),
+          _vm._v(" "),
+          _c("div", { staticClass: "card card-default" }, [
+            _c("div", { staticClass: "card-header" }, [
+              _c(
+                "textarea",
                 {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.message,
-                  expression: "message"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: {
-                type: "text",
-                placeholder: "Enter your message here and press Enter"
-              },
-              domProps: { value: _vm.message },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
-                  }
-                  return _vm.sendMessage($event)
+                  staticClass: "form-control",
+                  attrs: { rows: "10", readonly: "true" }
                 },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                [
+                  _vm._v(
+                    "                        " +
+                      _vm._s(_vm.allMessages.join("\n")) +
+                      "\n                    "
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "card-body" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.message,
+                    expression: "message"
                   }
-                  _vm.message = $event.target.value
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "text",
+                  placeholder: "Enter your message here and press Enter"
+                },
+                domProps: { value: _vm.message },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return _vm.sendMessage($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.message = $event.target.value
+                  }
                 }
-              }
-            })
+              })
+            ])
           ])
-        ])
-      ])
+        ],
+        2
+      )
     ])
   ])
 }
@@ -58061,7 +58090,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-1cc898f6", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-57ebc008", module.exports)
   }
 }
 
