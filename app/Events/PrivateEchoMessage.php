@@ -32,7 +32,7 @@ class PrivateEchoMessage implements ShouldBroadcast
     public function broadcastOn()
     {
 
-        return new PrivateChannel('room.'.$this->room_id);
+        return new PresenceChannel('room.'.$this->room_id);
 
     }
 }

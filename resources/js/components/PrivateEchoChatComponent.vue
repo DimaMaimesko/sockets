@@ -5,6 +5,12 @@
                 <h1>Private room # {{room.name}}</h1>
                 <h5>for next users:</h5>
                 <ul v-for="user in room.users">{{user.name}}</ul>
+                <hr>
+                <h5>Active users in room:</h5>
+                <ul>
+                    <li v-for="user in activeUsers">{{user}}</li>
+                </ul>
+
                 <div class="card card-default">
                     <div class="card-header">
                         <textarea rows="10" class="form-control" readonly="true">
@@ -43,11 +49,12 @@
                isActive: false,
                isActive: false,
                typingTimer: false,
+               activeUsers: [],
            }
        },
         computed: {
             channel() {
-                return  window.Echo.private('room.' + this.room.id)
+                return  window.Echo.join('room.' + this.room.id)
             }
         },
 
@@ -71,6 +78,17 @@
 
            });
 
+           this.channel.here((users) => {
+               this.activeUsers = users;
+           });
+
+           this.channel.joining((user) => {
+               this.activeUsers.push(user);
+           });
+
+           this.channel.leaving((user) => {
+               this.activeUsers.splice( this.activeUsers.indexOf(user), 1);
+           });
         },
 
         methods:  {

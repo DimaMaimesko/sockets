@@ -57965,6 +57965,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -57981,11 +57987,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             allMessages: [],
             message: '',
             isActive: false
-        }, _defineProperty(_ref, 'isActive', false), _defineProperty(_ref, 'typingTimer', false), _ref;
+        }, _defineProperty(_ref, 'isActive', false), _defineProperty(_ref, 'typingTimer', false), _defineProperty(_ref, 'activeUsers', []), _ref;
     },
     computed: {
         channel: function channel() {
-            return window.Echo.private('room.' + this.room.id);
+            return window.Echo.join('room.' + this.room.id);
         }
     },
 
@@ -58010,6 +58016,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             _this.typingTimer = setTimeout(function () {
                 _this.isActive = false;
             }, 2000);
+        });
+
+        this.channel.here(function (users) {
+            _this.activeUsers = users;
+        });
+
+        this.channel.joining(function (user) {
+            _this.activeUsers.push(user);
+        });
+
+        this.channel.leaving(function (user) {
+            _this.activeUsers.splice(_this.activeUsers.indexOf(user), 1);
         });
     },
 
@@ -58053,6 +58071,17 @@ var render = function() {
           _vm._l(_vm.room.users, function(user) {
             return _c("ul", [_vm._v(_vm._s(user.name))])
           }),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("h5", [_vm._v("Active users in room:")]),
+          _vm._v(" "),
+          _c(
+            "ul",
+            _vm._l(_vm.activeUsers, function(user) {
+              return _c("li", [_vm._v(_vm._s(user))])
+            })
+          ),
           _vm._v(" "),
           _c("div", { staticClass: "card card-default" }, [
             _c("div", { staticClass: "card-header" }, [
