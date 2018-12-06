@@ -57936,6 +57936,13 @@ module.exports = function normalizeComponent (
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
 //
 //
 //
@@ -57963,26 +57970,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 
     props: {
-        room: {}
+        room: {},
+        user: {}
     },
 
     data: function data() {
-        return {
+        var _ref;
+
+        return _ref = {
             allMessages: [],
-            message: ''
-        };
+            message: '',
+            isActive: false
+        }, _defineProperty(_ref, 'isActive', false), _defineProperty(_ref, 'typingTimer', false), _ref;
+    },
+    computed: {
+        channel: function channel() {
+            return window.Echo.private('room.' + this.room.id);
+        }
     },
 
     mounted: function mounted() {
         var _this = this;
 
-        console.log('Users: ' + this.room.users);
-        console.log('Room id: ' + this.room.id);
-        window.Echo.private('room.' + this.room.id).listen('PrivateEchoMessage', function (_ref) {
-            var message = _ref.message;
+        this.channel.listen('PrivateEchoMessage', function (_ref2) {
+            var message = _ref2.message;
 
             _this.allMessages.push(message);
-            console.log('From chat: ' + message);
+            _this.isActive = false;
+        });
+
+        this.channel.listenForWhisper('typing', function (e) {
+
+            _this.isActive = e.name;
+
+            if (_this.typingTimer) {
+                clearTimeout(_this.typingTimer);
+            }
+
+            _this.typingTimer = setTimeout(function () {
+                _this.isActive = false;
+            }, 2000);
         });
     },
 
@@ -57998,6 +58025,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
             this.allMessages.push(this.message);
             this.message = '';
+        },
+        userTyping: function userTyping() {
+            this.channel.whisper('typing', { name: this.user.name });
         }
     }
 });
@@ -58068,6 +58098,7 @@ var render = function() {
                     }
                     return _vm.sendMessage($event)
                   },
+                  keydown: _vm.userTyping,
                   input: function($event) {
                     if ($event.target.composing) {
                       return
@@ -58076,7 +58107,13 @@ var render = function() {
                   }
                 }
               })
-            ])
+            ]),
+            _vm._v(" "),
+            _vm.isActive
+              ? _c("div", { staticClass: "alert alert-info" }, [
+                  _vm._v(_vm._s(_vm.isActive) + " is typing...")
+                ])
+              : _vm._e()
           ])
         ],
         2

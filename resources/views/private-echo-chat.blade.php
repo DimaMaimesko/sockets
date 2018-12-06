@@ -6,7 +6,7 @@
     <div class="row justify-content-center">
             @if (Auth::check())
                 <h3>Wellcome <strong>{{Auth::user()->name}}</strong></h3>
-                <private-echo-chat-component :room="{{json_encode($room)}}"></private-echo-chat-component>
+                <private-echo-chat-component :room="{{json_encode($room)}}" :user="{{Auth::user()}}"></private-echo-chat-component>
             @endif
     </div>
 </div>

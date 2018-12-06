@@ -12,8 +12,13 @@
                         </textarea>
                     </div>
                     <div class="card-body">
-                      <input v-model="message" @keyup.enter="sendMessage" type="text" class="form-control" placeholder="Enter your message here and press Enter">
+                      <input v-model="message"
+                             @keyup.enter="sendMessage"
+                             @keydown="userTyping"
+                             type="text" class="form-control"
+                             placeholder="Enter your message here and press Enter">
                     </div>
+                    <div v-if='isActive'  class="alert alert-info">{{isActive}} is typing...</div>
                 </div>
             </div>
         </div>
@@ -28,22 +33,44 @@
 
         props: {
           room: {},
+          user: {},
         },
 
        data: function(){
            return {
                allMessages: [],
                message: '',
+               isActive: false,
+               isActive: false,
+               typingTimer: false,
            }
        },
+        computed: {
+            channel() {
+                return  window.Echo.private('room.' + this.room.id)
+            }
+        },
 
         mounted() {
-           console.log('Users: ' + this.room.users);
-           console.log('Room id: ' + this.room.id);
-           window.Echo.private('room.' + this.room.id).listen('PrivateEchoMessage', ({message}) => {
+           this.channel.listen('PrivateEchoMessage', ({message}) => {
                this.allMessages.push(message);
-               console.log('From chat: '+message);
+               this.isActive = false;
            });
+
+           this.channel.listenForWhisper('typing', (e) => {
+
+               this.isActive = e.name;
+
+               if(this.typingTimer) {
+                   clearTimeout(this.typingTimer);
+               }
+
+               this.typingTimer = setTimeout(() => {
+                   this.isActive = false;
+               }, 2000);
+
+           });
+
         },
 
         methods:  {
@@ -57,6 +84,9 @@
               });
               this.allMessages.push(this.message)
               this.message = '';
+          },
+          userTyping: function () {
+              this.channel.whisper('typing', {name: this.user.name})
           }
         }
     }
